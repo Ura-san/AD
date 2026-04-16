@@ -1,0 +1,842 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A&D Supply Chain | B2B Premium</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        html { scroll-behavior: smooth; }
+        body { font-family: 'Inter', sans-serif; }
+        
+        /* Animations */
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(24px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-up { animation: fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+        .delay-100 { animation-delay: 0.1s; }
+        
+        @keyframes scrollPremium {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+        .animate-marquee-premium {
+            display: flex;
+            width: 200%;
+            animation: scrollPremium 40s linear infinite;
+        }
+        .marquee-container:hover .animate-marquee-premium {
+            animation-play-state: paused;
+        }
+
+        @keyframes flowLine {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+        .flow-line-animated {
+            background: linear-gradient(90deg, transparent 0%, rgba(234, 88, 12, 0.2) 40%, rgba(234, 88, 12, 0.8) 50%, rgba(234, 88, 12, 0.2) 60%, transparent 100%);
+            background-size: 200% 100%;
+            animation: flowLine 3s linear infinite;
+        }
+
+        @keyframes pulseDot {
+            0%, 100% { transform: scale(1); opacity: 0.8; }
+            50% { transform: scale(1.5); opacity: 0.4; box-shadow: 0 0 10px rgba(234,88,12,0.5); }
+        }
+        .dot-pulse { animation: pulseDot 2s ease-in-out infinite; }
+        .dot-delay-1 { animation-delay: 0.5s; }
+        .dot-delay-2 { animation-delay: 1s; }
+
+        @keyframes rotateGlow {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .cta-glow-wrapper {
+            position: absolute;
+            inset: -50%;
+            background: conic-gradient(from 0deg, transparent 0%, rgba(255,255,255,0.4) 25%, transparent 50%);
+            animation: rotateGlow 15s linear infinite;
+        }
+
+        /* Interpolated Pendulum Animation for Rings */
+        @keyframes pendulum1 {
+            0% { transform: rotate(0deg); }
+            50% { transform: rotate(180deg); }
+            100% { transform: rotate(0deg); }
+        }
+        @keyframes pendulum2 {
+            0% { transform: rotate(0deg); }
+            50% { transform: rotate(-180deg); }
+            100% { transform: rotate(0deg); }
+        }
+        .anim-pendulum-1 { animation: pendulum1 20s ease-in-out infinite; }
+        .anim-pendulum-2 { animation: pendulum2 20s ease-in-out infinite; }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #ea580c; }
+    </style>
+</head>
+<body class="bg-[#FCFCFC] text-slate-800 antialiased selection:bg-orange-200 selection:text-orange-950 overflow-x-hidden">
+
+    <!-- Global Tooltip for Hover Interactions -->
+    <div id="hover-tooltip" class="fixed z-[120] pointer-events-none opacity-0 transition-opacity duration-200 bg-white/95 backdrop-blur-md border border-slate-200 rounded-xl p-4 shadow-2xl transform -translate-x-1/2 -translate-y-[110%] w-64">
+        <div id="tooltip-content" class="flex flex-col gap-1 text-xs"></div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="fixed w-full z-50 transition-all duration-300 bg-white/70 backdrop-blur-lg border-b border-white/30">
+        <div class="flex h-16 max-w-7xl mr-auto ml-auto pr-6 pl-6 items-center justify-between">
+            <div class="flex items-center gap-2">
+                <span class="text-xl font-normal tracking-tight text-slate-900">AD</span>
+                <div class="h-3 w-px bg-slate-300 mx-1"></div>
+                <span class="uppercase text-xs font-normal text-slate-500 tracking-widest">Fornecimento</span>
+            </div>
+            <div class="hidden md:flex items-center gap-8 text-sm font-normal text-slate-500">
+                <a href="#infraestrutura" class="hover:text-orange-600 transition-colors">Infraestrutura</a>
+                <a href="#setores" class="hover:text-orange-600 transition-colors">Setores</a>
+                <a href="#portal" class="hover:text-orange-600 transition-colors">Portal API</a>
+            </div>
+            <div class="flex items-center gap-4">
+                <a href="#portal" class="hidden md:inline-flex text-sm font-normal text-slate-600 hover:text-slate-900 transition-colors">Área Logística</a>
+                <div class="relative group">
+                    <div class="absolute inset-0 bg-orange-600/30 blur-md rounded-full scale-90 group-hover:scale-110 transition-all duration-300 opacity-0 group-hover:opacity-100"></div>
+                    <a href="#" class="relative inline-flex items-center justify-center px-4 py-1.5 text-xs font-normal text-white bg-orange-600 rounded-full hover:bg-orange-700 transition-all active:scale-95 shadow-sm">
+                        Área do Cliente
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="min-h-[80vh] flex flex-col overflow-hidden bg-gradient-to-b from-orange-50/80 via-white to-white pt-32 pb-16 relative items-center justify-center">
+        <div id="canvas-container" class="absolute inset-0 z-0 pointer-events-none opacity-50 mix-blend-multiply"></div>
+        <div class="absolute top-0 inset-x-0 h-96 bg-gradient-to-b from-orange-200/20 to-transparent pointer-events-none"></div>
+        
+        <div class="relative z-10 max-w-5xl mx-auto px-6 w-full text-center flex flex-col items-center mt-8 mb-12">
+            <div class="opacity-0 animate-fade-up flex flex-col items-center w-full">
+                <h1 class="md:text-6xl lg:text-7xl leading-[1.1] text-4xl font-normal text-slate-900 tracking-tight max-w-4xl mb-6">Referência nacional no fornecimento de <span class="text-transparent bg-clip-text bg-gradient-to-r from-orange-600 to-amber-500">porcelanas memoriais.</span></h1>
+                <p class="text-base md:text-lg text-slate-500 leading-relaxed mb-12 max-w-2xl font-light">
+                    Desenvolvemos soluções de altíssima durabilidade para funerárias e atacadistas. Engenharia de vitrificação com fluxo contínuo e integrado.
+                </p>
+                <div class="flex flex-col sm:flex-row items-center gap-4 animate-fade-up delay-100">
+                    <div class="relative group w-full sm:w-auto">
+                        <div class="absolute inset-0 bg-orange-600/30 blur-lg rounded-full scale-95 group-hover:scale-105 transition-all duration-300 opacity-0 group-hover:opacity-100"></div>
+                        <a href="#" class="relative w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 text-sm font-normal text-white bg-orange-600 rounded-full hover:bg-orange-700 transition-all active:scale-95 shadow-lg shadow-orange-600/20">
+                            <iconify-icon icon="solar:user-hand-up-linear" class="text-lg" stroke-width="1.5"></iconify-icon>
+                            Tornar-se Parceiro B2B
+                        </a>
+                    </div>
+                    <a href="#infraestrutura" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 text-sm font-normal text-slate-700 bg-white border border-slate-200 rounded-full hover:bg-slate-50 transition-all active:scale-95 shadow-sm">
+                        <iconify-icon icon="solar:play-circle-linear" class="text-lg text-orange-500" stroke-width="1.5"></iconify-icon>
+                        Conhecer a Infraestrutura
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Marquee Clients -->
+    <div class="w-full bg-white relative py-12">
+        <div class="max-w-7xl mx-auto px-6 relative">
+            <div class="mb-6 flex justify-start">
+                <span class="text-xs font-normal text-slate-400 uppercase tracking-widest opacity-70">Nossos Maiores Parceiros</span>
+            </div>
+            
+            <div class="overflow-hidden marquee-container bg-gradient-to-br from-white to-[#fff5ed]/50 w-full border-slate-100/50 border rounded-sm pt-10 pb-10 relative">
+                <!-- Glowing Corners L / Inverted L -->
+                <div class="absolute bottom-0 left-0 w-8 h-8 border-b-2 border-l-2 border-orange-400 bg-transparent opacity-90 pointer-events-none z-20"></div>
+                <div class="absolute top-0 right-0 w-8 h-8 border-t-2 border-r-2 border-orange-400 bg-transparent opacity-90 pointer-events-none z-20"></div>
+                
+                <div class="absolute left-0 top-0 bottom-0 w-32 bg-gradient-to-r from-white to-transparent z-10 pointer-events-none"></div>
+                <div class="absolute right-0 top-0 bottom-0 w-32 bg-gradient-to-l from-[#fff5ed]/80 to-transparent z-10 pointer-events-none"></div>
+                
+                <div class="animate-marquee-premium flex items-center">
+                    <div class="flex items-center justify-around w-1/2 px-8">
+                        <span class="info-trigger text-sm font-normal text-slate-500/80 tracking-widest uppercase hover:text-orange-600 transition-colors drop-shadow-sm cursor-help" data-type="client" data-name="Grupo Memorial" data-years="14 anos" data-rev="R$ 85M/ano" data-loc="São Paulo, SP">Grupo Memorial</span>
+                        <div class="w-1.5 h-1.5 rounded-full bg-orange-200"></div>
+                        <span class="info-trigger text-sm font-normal text-slate-500/80 tracking-widest uppercase hover:text-orange-600 transition-colors drop-shadow-sm cursor-help" data-type="client" data-name="Pax Nacional" data-years="8 anos" data-rev="R$ 32M/ano" data-loc="Curitiba, PR">Pax Nacional</span>
+                        <div class="w-1.5 h-1.5 rounded-full bg-orange-200"></div>
+                        <span class="info-trigger text-sm font-normal text-slate-500/80 tracking-widest uppercase hover:text-orange-600 transition-colors drop-shadow-sm cursor-help" data-type="client" data-name="Rede Prima" data-years="11 anos" data-rev="R$ 54M/ano" data-loc="Belo Horizonte, MG">Rede Prima</span>
+                        <div class="w-1.5 h-1.5 rounded-full bg-orange-200"></div>
+                        <span class="info-trigger text-sm font-normal text-slate-500/80 tracking-widest uppercase hover:text-orange-600 transition-colors drop-shadow-sm cursor-help" data-type="client" data-name="Consórcio Sul" data-years="5 anos" data-rev="R$ 18M/ano" data-loc="Porto Alegre, RS">Consórcio Sul</span>
+                    </div>
+                    <div class="flex items-center justify-around w-1/2 px-8">
+                        <span class="info-trigger text-sm font-normal text-slate-500/80 tracking-widest uppercase hover:text-orange-600 transition-colors drop-shadow-sm cursor-help" data-type="client" data-name="Grupo Memorial" data-years="14 anos" data-rev="R$ 85M/ano" data-loc="São Paulo, SP">Grupo Memorial</span>
+                        <div class="w-1.5 h-1.5 rounded-full bg-orange-200"></div>
+                        <span class="info-trigger text-sm font-normal text-slate-500/80 tracking-widest uppercase hover:text-orange-600 transition-colors drop-shadow-sm cursor-help" data-type="client" data-name="Pax Nacional" data-years="8 anos" data-rev="R$ 32M/ano" data-loc="Curitiba, PR">Pax Nacional</span>
+                        <div class="w-1.5 h-1.5 rounded-full bg-orange-200"></div>
+                        <span class="info-trigger text-sm font-normal text-slate-500/80 tracking-widest uppercase hover:text-orange-600 transition-colors drop-shadow-sm cursor-help" data-type="client" data-name="Rede Prima" data-years="11 anos" data-rev="R$ 54M/ano" data-loc="Belo Horizonte, MG">Rede Prima</span>
+                        <div class="w-1.5 h-1.5 rounded-full bg-orange-200"></div>
+                        <span class="info-trigger text-sm font-normal text-slate-500/80 tracking-widest uppercase hover:text-orange-600 transition-colors drop-shadow-sm cursor-help" data-type="client" data-name="Consórcio Sul" data-years="5 anos" data-rev="R$ 18M/ano" data-loc="Porto Alegre, RS">Consórcio Sul</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Setores B2B -->
+    <section id="setores" class="py-24 bg-white relative">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-16">
+                <div class="max-w-2xl">
+                    <h2 class="text-3xl font-normal text-slate-900 tracking-tight mb-4">Setores Integrados</h2>
+                    <p class="text-base text-slate-500 font-light">
+                        Estruturamos modelos de negócio escaláveis específicos para cada verticalização do segmento memorial.
+                    </p>
+                </div>
+            </div>
+            
+            <div class="grid md:grid-cols-3 gap-6">
+                <div class="bg-white/60 backdrop-blur-md border border-white/50 shadow-sm rounded-3xl p-8 hover:-translate-y-1 hover:border-orange-500/30 hover:shadow-xl hover:shadow-orange-900/5 transition-all flex flex-col h-full">
+                    <div class="w-10 h-10 rounded-lg bg-orange-50 flex items-center justify-center text-orange-600 mb-6 border border-orange-100">
+                        <iconify-icon icon="solar:buildings-linear" class="text-xl" stroke-width="1.5"></iconify-icon>
+                    </div>
+                    <h3 class="text-lg font-normal text-slate-900 tracking-tight mb-2">Funerárias &amp; Seguros</h3>
+                    <p class="text-sm text-slate-500 font-light leading-relaxed mb-6 flex-grow">
+                        Incorpore soluções de homenagem póstuma aos planos assistenciais. Fornecimento garantido por <span class="info-trigger text-orange-600 border-b border-dashed border-orange-300 cursor-help" data-type="tech" data-term="SLA (Service Level Agreement)" data-desc="Acordo de Nível de Serviço: contrato que estipula métricas rigorosas de tempo de resposta, produção e entrega, garantindo risco zero de desabastecimento.">SLA</span>.
+                    </p>
+                    <ul class="space-y-4 mt-auto">
+                        <li class="flex items-center gap-2 text-sm text-slate-600 font-light">
+                            <iconify-icon icon="solar:check-circle-linear" class="text-orange-500" stroke-width="1.5"></iconify-icon> Tabela regressiva
+                        </li>
+                        <li class="flex items-center gap-2 text-sm text-slate-600 font-light">
+                            <iconify-icon icon="solar:check-circle-linear" class="text-orange-500" stroke-width="1.5"></iconify-icon> Integração via <span class="info-trigger text-orange-600 border-b border-dashed border-orange-300 cursor-help" data-type="tech" data-term="API RESTful" data-desc="Interface de Programação de Aplicações: permite que o seu sistema de gestão (ERP) converse diretamente com a nossa fábrica para despachar pedidos automaticamente.">API</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="bg-white/60 backdrop-blur-md border border-white/50 shadow-sm rounded-3xl p-8 hover:-translate-y-1 hover:border-orange-500/30 hover:shadow-xl hover:shadow-orange-900/5 transition-all flex flex-col h-full">
+                    <div class="w-10 h-10 rounded-lg bg-slate-50 flex items-center justify-center text-slate-700 mb-6 border border-slate-100">
+                        <iconify-icon icon="solar:ruler-cross-pen-linear" class="text-xl" stroke-width="1.5"></iconify-icon>
+                    </div>
+                    <h3 class="text-lg font-normal text-slate-900 tracking-tight mb-2">Marmorarias</h3>
+                    <p class="text-sm text-slate-500 font-light leading-relaxed mb-6 flex-grow">
+                        Peças com <span class="info-trigger text-orange-600 border-b border-dashed border-orange-300 cursor-help" data-type="tech" data-term="Estabilidade Dimensional" data-desc="Controle milimétrico da retração da porcelana durante o cozimento a 900°C, garantindo que a peça encaixe perfeitamente no rebaixo do granito sem folgas.">estabilidade dimensional</span> severa para perfeito embutimento em rochas ornamentais.
+                    </p>
+                    <ul class="space-y-4 mt-auto">
+                        <li class="flex items-center gap-2 text-sm text-slate-600 font-light">
+                            <iconify-icon icon="solar:check-circle-linear" class="text-orange-500" stroke-width="1.5"></iconify-icon> Formatos cravados
+                        </li>
+                        <li class="flex items-center gap-2 text-sm text-slate-600 font-light">
+                            <iconify-icon icon="solar:check-circle-linear" class="text-orange-500" stroke-width="1.5"></iconify-icon> Resistência UV
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="bg-white/60 backdrop-blur-md border border-white/50 shadow-sm rounded-3xl p-8 hover:-translate-y-1 hover:border-orange-500/30 hover:shadow-xl hover:shadow-orange-900/5 transition-all flex flex-col h-full">
+                    <div class="w-10 h-10 rounded-lg bg-orange-50 flex items-center justify-center text-orange-600 mb-6 border border-orange-100">
+                        <iconify-icon icon="solar:shop-2-linear" class="text-xl" stroke-width="1.5"></iconify-icon>
+                    </div>
+                    <h3 class="text-lg font-normal text-slate-900 tracking-tight mb-2">Distribuidores</h3>
+                    <p class="text-sm text-slate-500 font-light leading-relaxed mb-6 flex-grow">
+                        Torne-se um polo de revenda regional com margem robusta e proteção territorial assegurada.
+                    </p>
+                    <ul class="space-y-4 mt-auto">
+                        <li class="flex items-center gap-2 text-sm text-slate-600 font-light">
+                            <iconify-icon icon="solar:check-circle-linear" class="text-orange-500" stroke-width="1.5"></iconify-icon> Exclusividade territorial
+                        </li>
+                        <li class="flex items-center gap-2 text-sm text-slate-600 font-light">
+                            <iconify-icon icon="solar:check-circle-linear" class="text-orange-500" stroke-width="1.5"></iconify-icon> Material <span class="info-trigger text-orange-600 border-b border-dashed border-orange-300 cursor-help" data-type="tech" data-term="White-Label" data-desc="Modelo de fornecimento onde o produto é fabricado por nós, mas entregue embalado com a sua marca e identidade visual, fortalecendo seu negócio.">white-label</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Infraestrutura Técnica -->
+    <section id="infraestrutura" class="py-24 bg-[#FAFAFA] border-t border-slate-100 overflow-hidden">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="grid lg:grid-cols-2 gap-16 items-center">
+                <div class="flex flex-col">
+                    <h2 class="text-3xl md:text-4xl font-normal text-slate-900 tracking-tight mb-4">Capacidade instalada para sua demanda.</h2>
+                    <p class="text-base text-slate-500 font-light mb-10 leading-relaxed">
+                        Parque fabril estruturado para absorver picos institucionais sem ruptura, mantendo controle de qualidade rigoroso e garantindo a expedição pontual da sua carga.
+                    </p>
+                    
+                    <div class="w-full bg-white border border-slate-200 rounded-2xl p-6 relative overflow-hidden shadow-sm">
+                        <div class="absolute inset-0 bg-gradient-to-r from-orange-50/30 to-transparent pointer-events-none"></div>
+                        <div class="relative z-10 flex flex-col sm:flex-row items-center justify-between gap-6">
+                            <div class="flex flex-col items-center sm:items-start shrink-0">
+                                <span class="text-xs font-normal text-orange-600 uppercase tracking-widest mb-1">Logística Ativa</span>
+                                <div class="flex items-center gap-2">
+                                    <span class="text-3xl font-normal text-slate-900 tracking-tight">24h</span>
+                                    <span class="text-xs text-slate-500 font-normal leading-tight">Prazo de<br>Expedição</span>
+                                </div>
+                            </div>
+                            
+                            <div class="flex-1 w-full relative flex items-center justify-between px-2 sm:px-4 mt-6 sm:mt-0">
+                                <div class="absolute left-4 right-4 top-1/2 -translate-y-1/2 h-px bg-slate-200"></div>
+                                <div class="absolute left-4 right-4 top-1/2 -translate-y-1/2 h-px flow-line-animated"></div>
+                                
+                                <div class="relative z-10 flex flex-col items-center gap-2 bg-white px-2">
+                                    <div class="w-2.5 h-2.5 rounded-full bg-orange-400 dot-pulse"></div>
+                                    <span class="text-xs font-normal text-slate-600 text-center leading-tight">Embalagem</span>
+                                </div>
+                                <div class="relative z-10 flex flex-col items-center gap-2 bg-white px-2">
+                                    <div class="w-2.5 h-2.5 rounded-full bg-orange-500 dot-pulse dot-delay-1"></div>
+                                    <span class="text-xs font-normal text-slate-600 text-center leading-tight">Expedição</span>
+                                </div>
+                                <div class="relative z-10 flex flex-col items-center gap-2 bg-white px-2">
+                                    <div class="w-2.5 h-2.5 rounded-full bg-orange-600 dot-pulse dot-delay-2 ring-4 ring-orange-50"></div>
+                                    <span class="text-xs font-normal text-slate-600 text-center leading-tight">Rastreio</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Video Player -->
+                <div class="relative w-full group">
+                    <div class="absolute -inset-6 bg-orange-500/20 blur-2xl rounded-[3rem] z-0 opacity-40 group-hover:opacity-80 transition-opacity duration-700 pointer-events-none"></div>
+                    
+                    <div class="relative w-full aspect-video rounded-xl bg-black overflow-hidden shadow-2xl shadow-slate-300/50 border border-slate-800 z-10">
+                        <div class="absolute inset-0 bg-gradient-to-br from-slate-800 to-slate-950 flex items-center justify-center opacity-90 group-hover:scale-105 transition-transform duration-700 ease-out">
+                            <div class="w-full h-full relative overflow-hidden">
+                                 <div class="absolute -top-20 -right-20 w-64 h-64 bg-orange-500/30 blur-[80px] rounded-full"></div>
+                                 <div class="absolute -bottom-20 -left-20 w-64 h-64 bg-blue-500/20 blur-[80px] rounded-full"></div>
+                                 <div class="absolute inset-0" style="background-image: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255,255,255,0.02) 2px, rgba(255,255,255,0.02) 4px);"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="absolute inset-0 bg-gradient-to-tr from-slate-900 via-transparent to-slate-900/40 opacity-90 transition-opacity duration-500 group-hover:opacity-60"></div>
+                        
+                        <div class="absolute inset-0 flex items-center justify-center z-20">
+                            <button class="relative w-16 h-16 rounded-full bg-white/10 backdrop-blur-md flex items-center justify-center border border-white/20 group-hover:scale-110 group-hover:bg-orange-600/90 group-hover:border-orange-500 transition-all duration-300 shadow-xl overflow-hidden">
+                                <iconify-icon icon="solar:play-bold" class="text-2xl text-white ml-1 relative z-10 drop-shadow-md"></iconify-icon>
+                            </button>
+                        </div>
+                        
+                        <!-- Player Controls -->
+                        <div class="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-black/90 to-transparent flex items-end px-6 pb-4 z-20">
+                            <div class="w-full flex items-center gap-4">
+                                <iconify-icon icon="solar:pause-linear" class="text-white/80 text-lg cursor-pointer hover:text-white transition-colors" stroke-width="1.5"></iconify-icon>
+                                <div class="flex-1 h-1 bg-white/20 rounded-full overflow-hidden cursor-pointer relative group/bar">
+                                    <div class="h-full w-[35%] bg-orange-500 relative"></div>
+                                </div>
+                                <span class="text-xs text-white/80 font-normal font-mono tracking-wider">01:24 / 04:50</span>
+                                <iconify-icon icon="solar:full-screen-linear" class="text-white/80 text-lg cursor-pointer hover:text-white transition-colors" stroke-width="1.5"></iconify-icon>
+                            </div>
+                        </div>
+                        
+                        <!-- Top Badges Modificados -->
+                        <div class="absolute top-4 left-4 z-20 flex items-center gap-2">
+                            <span class="px-2 py-1 bg-black/60 backdrop-blur-md border border-white/10 rounded text-[10px] font-normal text-white/90 uppercase tracking-widest shadow-sm">Tour Fabril</span>
+                            <span class="px-2 py-1 bg-gradient-to-r from-orange-500 to-amber-500 rounded text-[10px] font-normal text-white uppercase tracking-widest shadow-md">4K HDR</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Área Premium Light "A inteligência por trás..." -->
+    <section class="overflow-hidden bg-slate-50 border-slate-100 border-b pt-32 pb-32 relative" id="portal">
+        <!-- Fundo decorativo premium -->
+        <div class="absolute top-0 inset-x-0 h-96 bg-gradient-to-b from-white to-transparent pointer-events-none z-0"></div>
+        <div class="absolute right-0 top-1/4 w-96 h-96 bg-orange-100/40 rounded-full blur-[120px] pointer-events-none z-0"></div>
+        <div class="absolute left-0 bottom-1/4 w-96 h-96 bg-white rounded-full blur-[100px] pointer-events-none z-0"></div>
+        
+        <div class="max-w-7xl mx-auto px-6 relative z-10">
+            
+            <div class="mb-16 md:w-2/3">
+                <span class="text-xs font-normal text-orange-600 uppercase tracking-widest mb-3 block">Área do Cliente Premium</span>
+                <h2 class="text-3xl md:text-5xl font-normal text-slate-900 tracking-tight mb-6 leading-tight">A inteligência por trás do seu fornecimento.</h2>
+                <p class="text-base text-slate-500 font-light max-w-xl">
+                    Tecnologias imersivas integradas à sua operação. Cada etapa da produção e logística na palma da sua mão.
+                </p>
+            </div>
+
+            <!-- Bento Grid - 4 Funcionalidades (Modo Tour) -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                
+                <!-- 1. Inteligência Artificial (Destaque Principal) -->
+                <div class="md:col-span-2 bg-white rounded-3xl p-8 md:p-10 border border-slate-200/60 shadow-[0_8px_30px_rgb(0,0,0,0.04)] relative overflow-hidden group flex flex-col md:flex-row gap-8 items-center">
+                    <div class="flex-1 relative z-10">
+                        <div class="w-10 h-10 rounded-xl bg-orange-50 border border-orange-100 flex items-center justify-center text-orange-600 mb-6">
+                            <iconify-icon icon="solar:cpu-linear" class="text-xl" stroke-width="1.5"></iconify-icon>
+                        </div>
+                        <h3 class="text-2xl font-normal text-slate-900 tracking-tight mb-3">IA de Acompanhamento em Tempo Real</h3>
+                        <p class="text-sm text-slate-500 font-light leading-relaxed">
+                            Algoritmos de visão computacional analisam seus pedidos dentro do forno e nas esteiras de secagem, enviando atualizações milimétricas sobre o status e qualidade dos seus produtos.
+                        </p>
+                    </div>
+                    <!-- Immersive Photo Quadrant -->
+                    <div class="w-full md:w-5/12 h-48 md:h-64 relative rounded-2xl overflow-hidden shrink-0 border border-slate-200/50 bg-slate-100">
+                        <img src="https://images.unsplash.com/photo-1644426358812-879f02d1d867?w=800&q=80" alt="Inteligência Artificial Analítica" class="group-hover:scale-105 transition-transform duration-700 w-full h-full object-cover absolute top-0 right-0 bottom-0 left-0">
+                    </div>
+                </div>
+
+                <!-- 2. Amostras Privilegiadas -->
+                <div class="bg-gradient-to-br from-orange-50 to-[#fff8f4] rounded-3xl p-8 border border-orange-100 relative overflow-hidden group flex flex-col hover:shadow-lg hover:shadow-orange-900/5 transition-all cursor-default">
+                    <div class="w-10 h-10 rounded-xl bg-white border border-orange-200 flex items-center justify-center text-orange-600 mb-6">
+                        <iconify-icon icon="solar:star-fall-linear" class="text-xl" stroke-width="1.5"></iconify-icon>
+                    </div>
+                    <h3 class="text-xl font-normal text-slate-900 tracking-tight mb-3">Amostras Privilegiadas</h3>
+                    <p class="text-sm text-slate-500 font-light leading-relaxed mb-2">
+                        Sessão de testes (test-drive) VIP. Receba nossos produtos topo de linha em seu estabelecimento antes de realizar o primeiro pedido oficial.
+                    </p>
+                </div>
+
+                <!-- 3. Histórico de Compras -->
+                <div class="md:col-span-2 bg-white rounded-3xl p-8 md:p-10 border border-slate-200/60 shadow-[0_8px_30px_rgb(0,0,0,0.04)] relative overflow-hidden hover:border-slate-300 transition-colors flex flex-col md:flex-row gap-8 items-center group">
+                    <div class="flex-1 relative z-10">
+                        <div class="flex justify-between items-start mb-6">
+                            <div class="w-10 h-10 rounded-xl bg-slate-50 border border-slate-100 flex items-center justify-center text-slate-600">
+                                <iconify-icon icon="solar:history-linear" class="text-xl" stroke-width="1.5"></iconify-icon>
+                            </div>
+                            <span class="px-2 py-1 bg-emerald-50 text-emerald-600 text-[10px] uppercase tracking-widest rounded border border-emerald-100">Vitalício</span>
+                        </div>
+                        <h3 class="text-xl font-normal text-slate-900 tracking-tight mb-3">Histórico Integral</h3>
+                        <p class="text-sm text-slate-500 font-light leading-relaxed">
+                            Acesso irrestrito a matrizes, notas fiscais, SLAs cumpridos e faturamento passado em poucos cliques. Perfeito para conciliação contábil.
+                        </p>
+                    </div>
+                    <!-- Immersive Photo Quadrant -->
+                    <div class="w-full md:w-5/12 h-48 md:h-64 relative rounded-2xl overflow-hidden shrink-0 border border-slate-200/50 bg-slate-100">
+                        <img src="https://images.unsplash.com/photo-1644426358812-879f02d1d867?w=800&q=80" alt="Análise de Histórico em Tempo Real" class="group-hover:scale-105 transition-transform duration-700 w-full h-full object-cover bg-center absolute top-0 right-0 bottom-0 left-0">
+                    </div>
+                </div>
+
+                <!-- 4. Devoluções -->
+                <div class="bg-white rounded-3xl p-8 border border-slate-200/60 shadow-[0_8px_30px_rgb(0,0,0,0.04)] relative overflow-hidden group flex flex-col hover:border-slate-300 transition-colors cursor-default">
+                    <div class="w-10 h-10 rounded-xl bg-slate-50 border border-slate-100 flex items-center justify-center text-slate-600 mb-6">
+                        <iconify-icon icon="solar:refresh-circle-linear" class="text-xl" stroke-width="1.5"></iconify-icon>
+                    </div>
+                    <h3 class="text-xl font-normal text-slate-900 tracking-tight mb-3">Devoluções Ágeis</h3>
+                    <p class="text-sm text-slate-500 font-light leading-relaxed">
+                        Logística reversa desburocratizada. Sistema desenhado para proteger o parceiro em caso de inconsistências ou quebras acidentais de transporte. Acionamento facilitado.
+                    </p>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Fundo Translúcido Laranja Elegante cobrindo as seções inferiores -->
+    <div class="relative w-full overflow-hidden">
+        
+        <!-- Camada de Background Decorativo Premium -->
+        <div class="absolute inset-0 pointer-events-none z-0">
+            <!-- Gradiente base muito suave -->
+            <div class="absolute inset-0 bg-gradient-to-b from-white via-orange-50/40 to-orange-100/20"></div>
+            <!-- Luzes difusas / orbs -->
+            <div class="absolute left-0 top-[30%] w-[500px] h-[500px] rounded-full bg-orange-400/5 blur-[120px]"></div>
+            <div class="absolute right-0 bottom-[10%] w-[600px] h-[600px] rounded-full bg-amber-400/5 blur-[120px]"></div>
+            <div class="absolute inset-0 opacity-20" style="background-image: radial-gradient(circle at center, rgba(234, 88, 12, 0.15) 1px, transparent 1px); background-size: 40px 40px;"></div>
+        </div>
+
+        <!-- Catálogo Completo -->
+        <section id="catalogo" class="relative z-10 py-24 border-b border-orange-100/30">
+            <div class="max-w-7xl mx-auto px-6">
+                <div class="text-center mb-16">
+                    <h2 class="text-3xl font-normal text-slate-900 tracking-tight mb-4">Diversidade de Produção</h2>
+                    <p class="text-base text-slate-500 font-light max-w-2xl mx-auto">
+                        Nosso catálogo abrange desde formatos clássicos até projetos especiais. Modelagem dimensionada para otimização de frete e padronização absoluta no lote.
+                    </p>
+                </div>
+                <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                    
+                    <!-- Cards de Produtos com fundo branco ou translúcido -->
+                    <div class="p-6 rounded-2xl bg-white/70 backdrop-blur-sm border border-slate-100/80 text-left hover:bg-white hover:border-orange-200 hover:shadow-lg hover:-translate-y-1 transition-all cursor-default group flex flex-col h-full shadow-sm">
+                        <div class="flex justify-between items-start mb-6">
+                            <span class="text-xs font-normal text-slate-400 uppercase tracking-widest group-hover:text-orange-500 transition-colors">Série O</span>
+                            <iconify-icon icon="solar:maximize-square-minimalistic-linear" class="text-slate-300 group-hover:text-orange-400 transition-colors" stroke-width="1.5"></iconify-icon>
+                        </div>
+                        <div class="w-16 h-20 rounded-[40%] bg-slate-50 shadow-inner border border-slate-200/50 mx-auto mb-6 group-hover:scale-105 transition-transform group-hover:border-orange-200"></div>
+                        <div class="mt-auto">
+                            <h4 class="text-sm font-normal text-slate-900 mb-1 tracking-tight">Ovais Clássicas</h4>
+                            <p class="text-xs text-slate-500 font-light">6x8cm até 30x40cm</p>
+                        </div>
+                    </div>
+
+                    <div class="p-6 rounded-2xl bg-white/70 backdrop-blur-sm border border-slate-100/80 text-left hover:bg-white hover:border-orange-200 hover:shadow-lg hover:-translate-y-1 transition-all cursor-default group flex flex-col h-full shadow-sm">
+                        <div class="flex justify-between items-start mb-6">
+                            <span class="text-xs font-normal text-slate-400 uppercase tracking-widest group-hover:text-orange-500 transition-colors">Série R</span>
+                            <iconify-icon icon="solar:maximize-square-minimalistic-linear" class="text-slate-300 group-hover:text-orange-400 transition-colors" stroke-width="1.5"></iconify-icon>
+                        </div>
+                        <div class="w-16 h-20 rounded-md bg-slate-50 shadow-inner border border-slate-200/50 mx-auto mb-6 group-hover:scale-105 transition-transform group-hover:border-orange-200"></div>
+                        <div class="mt-auto">
+                            <h4 class="text-sm font-normal text-slate-900 mb-1 tracking-tight">Retangulares</h4>
+                            <p class="text-xs text-slate-500 font-light">Bordas abauladas ou retas</p>
+                        </div>
+                    </div>
+
+                    <div class="p-6 rounded-2xl bg-white/70 backdrop-blur-sm border border-slate-100/80 text-left hover:bg-white hover:border-orange-200 hover:shadow-lg hover:-translate-y-1 transition-all cursor-default group flex flex-col h-full shadow-sm">
+                        <div class="flex justify-between items-start mb-6">
+                            <span class="text-xs font-normal text-slate-400 uppercase tracking-widest group-hover:text-orange-500 transition-colors">Série P</span>
+                            <iconify-icon icon="solar:maximize-square-minimalistic-linear" class="text-slate-300 group-hover:text-orange-400 transition-colors" stroke-width="1.5"></iconify-icon>
+                        </div>
+                        <div class="w-20 h-14 rounded-md bg-slate-50 shadow-inner border border-slate-200/50 mx-auto mb-8 group-hover:scale-105 transition-transform group-hover:border-orange-200"></div>
+                        <div class="mt-auto">
+                            <h4 class="text-sm font-normal text-slate-900 mb-1 tracking-tight">Paisagem</h4>
+                            <p class="text-xs text-slate-500 font-light">Inscrições duplas</p>
+                        </div>
+                    </div>
+
+                    <div class="p-6 rounded-2xl bg-white/70 backdrop-blur-sm border border-slate-100/80 text-left hover:bg-white hover:border-orange-200 hover:shadow-lg hover:-translate-y-1 transition-all cursor-default group flex flex-col h-full shadow-sm">
+                        <div class="flex justify-between items-start mb-6">
+                            <span class="text-xs font-normal text-slate-400 uppercase tracking-widest group-hover:text-orange-500 transition-colors">Série C</span>
+                            <iconify-icon icon="solar:maximize-square-minimalistic-linear" class="text-slate-300 group-hover:text-orange-400 transition-colors" stroke-width="1.5"></iconify-icon>
+                        </div>
+                        <div class="w-16 h-16 rounded-full bg-slate-50 shadow-inner border border-slate-200/50 mx-auto mb-8 group-hover:scale-105 transition-transform group-hover:border-orange-200"></div>
+                        <div class="mt-auto">
+                            <h4 class="text-sm font-normal text-slate-900 mb-1 tracking-tight">Medalhões</h4>
+                            <p class="text-xs text-slate-500 font-light">Circulares simétricos</p>
+                        </div>
+                    </div>
+
+                    <div class="p-6 rounded-2xl bg-white/70 backdrop-blur-sm border border-slate-100/80 text-left hover:bg-white hover:border-orange-200 hover:shadow-lg hover:-translate-y-1 transition-all cursor-default group flex flex-col h-full shadow-sm">
+                        <div class="flex justify-between items-start mb-6">
+                            <span class="text-xs font-normal text-slate-400 uppercase tracking-widest group-hover:text-orange-500 transition-colors">Série L</span>
+                            <iconify-icon icon="solar:maximize-square-minimalistic-linear" class="text-slate-300 group-hover:text-orange-400 transition-colors" stroke-width="1.5"></iconify-icon>
+                        </div>
+                        <div class="w-16 h-20 bg-slate-50 shadow-inner border border-slate-200/50 mx-auto mb-6 relative group-hover:scale-105 transition-transform group-hover:border-orange-200" style="border-radius: 4px 16px 4px 16px;">
+                            <div class="absolute inset-y-2 left-1/2 w-px bg-slate-200/80"></div>
+                        </div>
+                        <div class="mt-auto">
+                            <h4 class="text-sm font-normal text-slate-900 mb-1 tracking-tight">Pergaminho</h4>
+                            <p class="text-xs text-slate-500 font-light">Superfícies texturizadas</p>
+                        </div>
+                    </div>
+
+                    <!-- CTA VIP integrado -->
+                    <div class="p-6 rounded-2xl bg-gradient-to-r from-orange-500 to-orange-600 border border-orange-400 text-left hover:shadow-lg hover:shadow-orange-600/30 hover:-translate-y-1 transition-all cursor-pointer group flex flex-col h-full md:col-span-3 lg:col-span-3">
+                        <div class="flex justify-between items-start mb-6">
+                            <span class="text-xs font-normal text-white/80 uppercase tracking-widest">Acesso Premium</span>
+                            <iconify-icon icon="solar:star-circle-linear" class="text-white text-lg group-hover:rotate-180 transition-transform duration-500" stroke-width="1.5"></iconify-icon>
+                        </div>
+                        <div class="flex-1 flex flex-col md:flex-row items-center justify-between gap-6">
+                            <div>
+                                <h4 class="text-lg font-normal text-white mb-1 tracking-tight">Requerer Amostras Físicas</h4>
+                                <p class="text-sm text-white/80 font-light max-w-sm">
+                                    Receba um kit VIP de prospecção completo contendo nossas matrizes mais solicitadas, validando a inteligência antes da compra.
+                                </p>
+                            </div>
+                            <a href="#" class="shrink-0 px-6 py-2 bg-white text-orange-600 text-sm font-medium rounded-full hover:bg-orange-50 transition-colors flex items-center gap-2 shadow-sm">
+                                Solicitar Kit <iconify-icon icon="solar:arrow-right-linear" stroke-width="1.5"></iconify-icon>
+                            </a>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA Final -->
+        <section class="relative z-10 py-24 mx-4 md:mx-auto max-w-7xl mb-16 mt-8">
+            <div class="absolute inset-0 bg-white/60 backdrop-blur-md border border-white/50 rounded-3xl overflow-hidden shadow-xl shadow-slate-200/20">
+                <div class="absolute top-1/2 left-0 -translate-y-1/2 w-[600px] h-[600px] pointer-events-none opacity-20 mix-blend-multiply">
+                    <div class="cta-glow-wrapper rounded-full blur-3xl"></div>
+                </div>
+                
+                <div class="absolute right-10 top-1/2 -translate-y-1/2 w-64 h-64 flex items-center justify-center pointer-events-none">
+                    <div class="absolute w-64 h-64 border border-orange-300/30 rounded-full anim-pendulum-1"></div>
+                    <div class="absolute w-48 h-48 border border-orange-300/40 rounded-full anim-pendulum-2"></div>
+                </div>
+            </div>
+            
+            <div class="relative z-10 p-10 md:p-16 flex flex-col md:flex-row items-center justify-between gap-10">
+                <div class="max-w-xl text-center md:text-left">
+                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white border border-slate-200 mb-6 shadow-sm">
+                        <div class="w-1.5 h-1.5 rounded-full bg-orange-500 animate-pulse"></div>
+                        <span class="text-xs font-normal text-slate-600 tracking-wide uppercase">Sistema B2B Online</span>
+                    </div>
+                    <h2 class="text-3xl md:text-4xl font-normal text-slate-900 tracking-tight mb-4">
+                        Pronto para estruturar seu fornecimento?
+                    </h2>
+                    <p class="text-sm md:text-base text-slate-500 font-light leading-relaxed">
+                        Valide seu CNPJ e obtenha acesso imediato à plataforma de cotação B2B, matriz de SLAs e descontos progressivos por volume.
+                    </p>
+                </div>
+                <div class="shrink-0 w-full md:w-auto flex flex-col items-center">
+                    <a href="#" class="flex items-center justify-center w-full px-8 py-4 text-sm font-normal text-white bg-slate-900 rounded-full hover:bg-slate-800 transition-all active:scale-95 shadow-lg group">
+                        Iniciar Cadastramento
+                        <iconify-icon icon="solar:arrow-right-linear" class="ml-2 text-lg text-white/80 group-hover:translate-x-1 transition-transform" stroke-width="1.5"></iconify-icon>
+                    </a>
+                    <p class="text-xs text-slate-400 mt-4 font-normal tracking-widest uppercase">Operação exclusiva PJ</p>
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t border-slate-200 pt-16 pb-8 mt-auto relative z-20">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-12 lg:gap-8 mb-16">
+                <div class="lg:col-span-2">
+                    <div class="flex items-center gap-2 mb-6">
+                        <span class="text-xl font-normal tracking-tight text-slate-900">AD</span>
+                        <div class="h-4 w-px bg-slate-300 mx-1"></div>
+                        <span class="text-xs font-normal text-slate-500 uppercase tracking-widest">Supply Chain</span>
+                    </div>
+                    <p class="text-sm text-slate-500 font-light leading-relaxed mb-8 max-w-sm">
+                        Indústria líder em memoriografia de alta resistência. Soluções de suprimento B2B ponta a ponta para funerárias, atacadistas e marmorarias.
+                    </p>
+                </div>
+                <div>
+                    <h5 class="text-xs font-normal text-slate-900 uppercase tracking-widest mb-6">Produtos</h5>
+                    <ul class="space-y-4">
+                        <li><a href="#" class="text-sm text-slate-500 font-light hover:text-orange-600 transition-colors">Catálogo</a></li>
+                        <li><a href="#" class="text-sm text-slate-500 font-light hover:text-orange-600 transition-colors">Série Premium</a></li>
+                        
+                    </ul>
+                </div>
+                <div>
+                    <h5 class="text-xs font-normal text-slate-900 uppercase tracking-widest mb-6">Soluções</h5>
+                    <ul class="space-y-4">
+                        <li><a href="#" class="text-sm text-slate-500 font-light hover:text-orange-600 transition-colors">Portal API</a></li>
+                        <li><a href="#" class="text-sm text-slate-500 font-light hover:text-orange-600 transition-colors">Tabela SLA</a></li>
+                        
+                    </ul>
+                </div>
+                <div>
+                    <h5 class="text-xs font-normal text-slate-900 uppercase tracking-widest mb-6">Comercial</h5>
+                    <ul class="space-y-4">
+                        <li><a href="#" class="text-sm text-slate-500 font-light hover:text-orange-600 transition-colors">Sobre Nós</a></li>
+                        <li><a href="#" class="text-sm text-slate-500 font-light hover:text-orange-600 transition-colors">Distribuição</a></li>
+                        
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="border-t border-slate-200 pt-8 flex flex-col md:flex-row justify-between items-center gap-6 text-xs text-slate-400 font-light">
+                <div class="flex flex-col md:flex-row items-center gap-2 md:gap-6">
+                    <span>© 2024 AD Supply Chain. Direitos reservados.</span>
+                </div>
+                <div class="flex items-center gap-6">
+                    <a href="#" class="hover:text-slate-900 transition-colors">Termos</a>
+                    <a href="#" class="hover:text-slate-900 transition-colors">Privacidade</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Chatbot Widget Animado Redesenhado -->
+    <div id="chat-widget" class="fixed bottom-6 left-6 z-[100] flex flex-col items-start pointer-events-none">
+        
+        <div id="chat-window" class="origin-bottom-left scale-0 opacity-0 transition-all duration-500 bg-white border border-slate-200 rounded-2xl w-[340px] h-[450px] flex flex-col overflow-hidden mb-4 shadow-2xl shadow-orange-900/10 pointer-events-auto relative z-20">
+            <!-- Header Orange Gradient -->
+            <div class="bg-gradient-to-r from-orange-600 to-amber-500 p-4 flex items-center justify-between shadow-sm relative overflow-hidden">
+                <div class="absolute -right-4 -top-4 w-16 h-16 bg-white/10 rounded-full blur-md"></div>
+                <div class="flex items-center gap-3 relative z-10">
+                    <div class="w-10 h-10 rounded-full bg-white/20 border border-white/30 flex items-center justify-center text-white backdrop-blur-sm">
+                        <iconify-icon icon="solar:user-bold" stroke-width="1.5" class="text-xl"></iconify-icon>
+                    </div>
+                    <div>
+                        <h4 class="text-sm text-white font-normal tracking-wide">Consultor VIP</h4>
+                        <div class="flex items-center gap-1.5 mt-0.5">
+                            <div class="w-1.5 h-1.5 bg-emerald-400 rounded-full animate-pulse shadow-[0_0_5px_rgba(52,211,153,0.8)]"></div>
+                            <p class="text-[10px] text-white/80 font-light uppercase tracking-widest">Online</p>
+                        </div>
+                    </div>
+                </div>
+                <button id="close-chat-btn" class="text-white/80 hover:text-white transition-colors relative z-10">
+                    <iconify-icon icon="solar:close-circle-linear" stroke-width="1.5" class="text-2xl"></iconify-icon>
+                </button>
+            </div>
+            
+            <!-- Body -->
+            <div class="flex-1 bg-slate-50 p-4 flex flex-col gap-4 overflow-y-auto relative">
+                <div class="absolute inset-0 opacity-[0.03] pointer-events-none" style="background-image: repeating-linear-gradient(45deg, #000 0, #000 1px, transparent 1px, transparent 10px);"></div>
+                
+                <!-- Initial Message -->
+                <div class="bg-white border border-orange-100 p-3.5 rounded-2xl rounded-tl-sm text-sm text-slate-600 font-light shadow-sm shadow-orange-900/5 w-[85%] relative animate-fade-up">
+                    <div class="absolute -left-1 -top-1 w-2.5 h-2.5 bg-orange-400 border-2 border-white rounded-full"></div>
+                    Olá! Como posso ajudar a otimizar a sua cadeia de suprimentos hoje?
+                </div>
+                
+                <!-- Options -->
+                <div class="flex flex-wrap gap-2 text-xs mt-1 animate-fade-up delay-100">
+                    <button class="bg-white border border-orange-200 text-orange-700 px-3 py-1.5 rounded-full hover:bg-orange-50 hover:border-orange-400 transition-all shadow-sm">📊 Histórico</button>
+                    <button class="bg-white border border-orange-200 text-orange-700 px-3 py-1.5 rounded-full hover:bg-orange-50 hover:border-orange-400 transition-all shadow-sm">📦 Amostras Test-Drive</button>
+                </div>
+
+                <!-- Typing Indicator -->
+                <div class="flex items-center gap-1 p-3 w-max bg-orange-50 border border-orange-100 rounded-full mt-2 shadow-sm">
+                    <div class="w-1.5 h-1.5 bg-orange-400 rounded-full animate-bounce" style="animation-delay: 0ms;"></div>
+                    <div class="w-1.5 h-1.5 bg-orange-400 rounded-full animate-bounce" style="animation-delay: 150ms;"></div>
+                    <div class="w-1.5 h-1.5 bg-orange-400 rounded-full animate-bounce" style="animation-delay: 300ms;"></div>
+                </div>
+            </div>
+
+            <!-- Input -->
+            <div class="p-3 bg-white border-t border-slate-100 flex items-center gap-2">
+                <input type="text" placeholder="Digite sua mensagem..." class="flex-1 text-sm bg-slate-50 border border-slate-200 rounded-full px-4 py-2 outline-none font-light placeholder:text-slate-400 focus:border-orange-300 focus:ring-2 focus:ring-orange-100 transition-all">
+                <button class="w-9 h-9 shrink-0 rounded-full bg-orange-600 text-white flex items-center justify-center hover:bg-orange-700 transition-colors shadow-md shadow-orange-600/20">
+                    <iconify-icon icon="solar:plain-2-bold" stroke-width="1.5" class="ml-0.5"></iconify-icon>
+                </button>
+            </div>
+        </div>
+
+        <!-- Floating Button -->
+        <button id="chat-toggle" class="w-14 h-14 rounded-full bg-gradient-to-tr from-orange-600 to-amber-500 text-white shadow-lg shadow-orange-600/30 flex items-center justify-center hover:shadow-xl hover:shadow-orange-600/40 transition-all hover:scale-105 active:scale-95 pointer-events-auto absolute bottom-0 left-0 z-10 border border-orange-400/50">
+            <iconify-icon icon="solar:chat-round-line-linear" stroke-width="1.5" class="text-2xl transition-transform duration-300" id="chat-icon"></iconify-icon>
+        </button>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const tooltip = document.getElementById('hover-tooltip');
+            const tooltipContent = document.getElementById('tooltip-content');
+            const triggers = document.querySelectorAll('.info-trigger');
+
+            triggers.forEach(trigger => {
+                trigger.addEventListener('mousemove', (e) => {
+                    const type = trigger.getAttribute('data-type');
+                    
+                    if(type === 'client') {
+                        const name = trigger.getAttribute('data-name');
+                        const years = trigger.getAttribute('data-years');
+                        const rev = trigger.getAttribute('data-rev');
+                        const loc = trigger.getAttribute('data-loc');
+                        
+                        tooltipContent.innerHTML = `
+                            <div class="flex justify-between items-start mb-1">
+                                <span class="text-[10px] text-orange-600 uppercase tracking-widest font-normal">Parceiro B2B</span>
+                                <span class="text-[9px] text-slate-500 bg-slate-100 px-1.5 py-0.5 rounded border border-slate-200/60">${loc}</span>
+                            </div>
+                            <strong class="text-sm text-slate-800 tracking-tight font-normal block">${name}</strong>
+                            <div class="flex justify-between items-center mt-2 pt-2 border-t border-slate-100">
+                                <span class="text-slate-500">Tempo: <b class="text-slate-700 font-normal">${years}</b></span>
+                                <span class="text-slate-500">Fat. Est.: <b class="text-slate-700 font-normal">${rev}</b></span>
+                            </div>
+                        `;
+                    } else if(type === 'tech') {
+                        const term = trigger.getAttribute('data-term');
+                        const desc = trigger.getAttribute('data-desc');
+                        tooltipContent.innerHTML = `
+                            <span class="text-[10px] text-orange-600 uppercase tracking-widest font-normal flex items-center gap-1">
+                                Conceito Técnico
+                            </span>
+                            <strong class="text-sm text-slate-800 tracking-tight font-normal mt-1 block">${term}</strong>
+                            <p class="text-slate-500 font-light mt-1 leading-relaxed">${desc}</p>
+                        `;
+                    }
+
+                    const x = e.clientX;
+                    const y = e.clientY;
+                    
+                    let finalX = x;
+                    if(x + 130 > window.innerWidth) finalX = window.innerWidth - 130;
+                    
+                    tooltip.style.left = `${finalX}px`;
+                    tooltip.style.top = `${y - 15}px`; 
+                    tooltip.style.opacity = '1';
+                });
+
+                trigger.addEventListener('mouseleave', () => {
+                    tooltip.style.opacity = '0';
+                });
+            });
+
+            // Chatbot Animations
+            const chatToggle = document.getElementById('chat-toggle');
+            const chatWindow = document.getElementById('chat-window');
+            const closeChatBtn = document.getElementById('close-chat-btn');
+            let isChatOpen = false;
+
+            function toggleChat() {
+                isChatOpen = !isChatOpen;
+                if(isChatOpen) {
+                    chatWindow.classList.remove('scale-0', 'opacity-0');
+                    chatWindow.classList.add('scale-100', 'opacity-100');
+                    chatToggle.style.transform = 'scale(0.5)';
+                    chatToggle.style.opacity = '0';
+                    chatToggle.style.pointerEvents = 'none';
+                } else {
+                    chatWindow.classList.remove('scale-100', 'opacity-100');
+                    chatWindow.classList.add('scale-0', 'opacity-0');
+                    chatToggle.style.transform = 'scale(1)';
+                    chatToggle.style.opacity = '1';
+                    chatToggle.style.pointerEvents = 'auto';
+                }
+            }
+
+            if(chatToggle && closeChatBtn) {
+                chatToggle.addEventListener('click', toggleChat);
+                closeChatBtn.addEventListener('click', toggleChat);
+            }
+
+            // ThreeJS Background
+            const container = document.getElementById('canvas-container');
+            if (container && typeof THREE !== 'undefined') {
+                const scene = new THREE.Scene();
+                const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+                camera.position.z = 30;
+                camera.position.y = 8;
+                
+                const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: false });
+                renderer.setSize(window.innerWidth, window.innerHeight);
+                renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
+                container.appendChild(renderer.domElement);
+                
+                const particleCount = 600;
+                const geometry = new THREE.BufferGeometry();
+                const positions = new Float32Array(particleCount * 3);
+                
+                let i = 0;
+                for(let x = -50; x < 50; x += 6) {
+                    for(let z = -50; z < 50; z += 6) {
+                        if(i >= particleCount * 3) break;
+                        positions[i] = x + (Math.random() - 0.5) * 2;
+                        positions[i+1] = 0;
+                        positions[i+2] = z + (Math.random() - 0.5) * 2;
+                        i += 3;
+                    }
+                }
+                
+                geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+                
+                const material = new THREE.PointsMaterial({ 
+                    color: 0xea580c, 
+                    size: 0.15, 
+                    transparent: true, 
+                    opacity: 0.4
+                });
+                
+                const particles = new THREE.Points(geometry, material);
+                scene.add(particles);
+                
+                const clock = new THREE.Clock();
+                
+                function animate() {
+                    requestAnimationFrame(animate);
+                    const time = clock.getElapsedTime() * 0.15;
+                    const posAttribute = geometry.attributes.position;
+                    
+                    for(let j = 0; j < particleCount; j++) {
+                        const x = posAttribute.getX(j);
+                        const z = posAttribute.getZ(j);
+                        const y = Math.sin(x * 0.05 + time) * Math.cos(z * 0.05 + time) * 3;
+                        posAttribute.setY(j, y);
+                    }
+                    
+                    posAttribute.needsUpdate = true;
+                    scene.rotation.y = time * 0.05;
+                    renderer.render(scene, camera);
+                }
+                animate();
+                
+                window.addEventListener('resize', () => {
+                    camera.aspect = window.innerWidth / window.innerHeight;
+                    camera.updateProjectionMatrix();
+                    renderer.setSize(window.innerWidth, window.innerHeight);
+                });
+            }
+        });
+    </script>
+
+</body>
+</html>
